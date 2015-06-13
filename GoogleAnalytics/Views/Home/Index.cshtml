@@ -1,0 +1,236 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Google Analytics";
+}
+
+@section styles {
+    <link href="~/Scripts/bootstrap-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/jqChart.css" />
+    <link rel="stylesheet" href="~/Content/jqGeoMap.css" />
+    <link rel="stylesheet" href="~/Content/flags.css" />
+}
+
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label>Username:</label>
+                <div class="pull-right">
+                    <input type="text" class="input-sm" id="username" placeholder="example@example.com" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Password:</label>
+                <div class="pull-right">
+                    <input type="password" class="input-sm" id="password" placeholder="Password" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Site ID:</label>
+                <div class="pull-right">
+                    <input type="text" class="input-sm" id="siteID" placeholder="ga:156687" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button id="save-info" class="btn btn-primary btn-lg"><i class="fa fa-check"></i> Submit & Grab Analytics</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <p><span style="text-decoration:underline;">Note:</span> You can use <a href="https://ga-dev-tools.appspot.com/query-explorer/">Google Query Explorer</a> for getting your credentials.</p>
+</div>
+
+<div id="analytics" style="display:none;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right col-md-4">
+                <table style="width:100%;">
+                    <tr>
+                        <td>
+                            <strong>Select Date Range:</strong>
+                        </td>
+                        <td style="text-align:right;">
+                            <div id="dashboard-report-range" style="width:175px;border:1px dashed;cursor:pointer;">
+                                <i class="fa fa-calendar"></i>
+                                <span>
+                                </span>
+                                <i class="fa fa-angle-down"></i>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="widget wblue">
+        <div class="widget-head">
+            <div class="pull-left">Visitor Statistics</div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="widget-content">
+            <div class="tabbable">
+                <ul class="nav nav-tabs nav-pills">
+                    <li class="active"><a href="#tab1" data-toggle="tab" id="daily">Daily</a></li>
+                    <li><a href="#tab2" data-toggle="tab" id="weekly">Weekly</a></li>
+                    <li><a href="#tab3" data-toggle="tab" id="monthly">Monthly</a></li>
+                    <li><a href="#tab4" data-toggle="tab" id="yearly">Yearly</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab1">
+                        <div id="jqChartVisitDaily" style="width: 100%; height: 300px;">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab2">
+                        <div id="jqChartVisitWeekly" style="width: 100%; height: 300px;">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab3">
+                        <div id="jqChartVisitMonthly" style="width: 100%; height: 300px;">
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab4">
+                        <div id="jqChartVisitYearly" style="width: 100%; height: 300px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="widget wblue">
+                <div class="widget-head">
+                    <div class="pull-left">Map Statistics</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                    <div id="jqGeoMap" style="width: 100%; height: 300px;">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="widget wblue">
+                <div class="widget-head">
+                    <div class="pull-left">Browser Statistics</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                    <div id="jqChart" style="width: 100%; height: 300px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="widget wblue">
+                <div class="widget-head">
+                    <div class="pull-left">Website Statistics</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                    <div id="visitSite"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="widget wblue">
+                <div class="widget-head">
+                    <div class="pull-left">Language Statistics</div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="widget-content">
+                    <div id="sessionLanguage"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="widget wblue">
+            <div class="widget-head">
+                <div class="pull-left">Visited Pages</div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-content">
+                <div id="visitPages"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="loading" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Loading...</h4>
+            </div>
+            <div class="modal-body">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/Scripts/bootstrap-daterangepicker/moment.min.js"></script>
+    <script src="~/Scripts/bootstrap-daterangepicker/daterangepicker.js"></script>
+    <script src="~/Scripts/jqChart.js"></script>
+    <script src="~/Scripts/jqChart-tr.js"></script>
+    <script src="~/Scripts/jqGeoMap.min.js"></script>
+    <script src="~/Scripts/index.js" charset="iso-8859-1" type="text/javascript"></script>
+    <script>
+        jQuery(document).ready(function () {
+            $("#save-info").click(function () {
+                if ($("#username").val() == "") {
+                    alert("Enter Username!");
+                    return false;
+                }
+                else if ($("#password").val() == "") {
+                    alert("Enter Password!");
+                    return false;
+                }
+                else if ($("#siteID").val() == "") {
+                    alert("Enter Site ID!");
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/SaveInfo",
+                    data: { Username: $("#username").val(), Password: $("#password").val(), SiteID: $("#siteID").val() },
+                    success: function () {
+                        Index.initHomeDaterange();
+                        $("#analytics").show();
+                    }
+                });
+            });
+        });
+        jQuery(document).ajaxStart(function () {
+            $("#loading").modal("show");
+        }).ajaxStop(function () {
+            $("#loading").modal("hide");
+        });
+    </script>
+}
